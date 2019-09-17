@@ -1,0 +1,6 @@
+﻿  Game.cpp
+c:\users\ben\source\repos\tetris\tetris\game.h(45): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\ben\source\repos\tetris\tetris\game.cpp(27): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\ben\source\repos\tetris\tetris\game.cpp(33): warning C4018: '<': signed/unsigned mismatch
+c:\users\ben\source\repos\tetris\tetris\game.cpp(84): warning C4018: '<': signed/unsigned mismatch
+  Tetris.vcxproj -> C:\Users\Ben\source\repos\Tetris\Debug\Tetris.exe

@@ -30,11 +30,20 @@ void Game::start() {
 				float xPos = rand() % 800 + 1;
 				blockVec[currentBlock]->setPosition({ xPos, 20 });
 				// set right texture:
-				if (blockVec[currentBlock]->getBlockName() == "Tblock") {
+				if (nameOfBlock == "Tblock") {
 					blockVec[currentBlock]->setTexture("resources/Tblock.png");
 				}
-				else if (blockVec[currentBlock]->getBlockName() == "Lblock") {
+				else if (nameOfBlock == "Lblock") {
 					blockVec[currentBlock]->setTexture("resources/Lblock.png");
+				}
+				else if (nameOfBlock == "Sblock") {
+					blockVec[currentBlock]->setTexture("resources/Sblock.png");
+				}
+				else if (nameOfBlock == "SQblock") {
+					blockVec[currentBlock]->setTexture("resources/SQblock.png");
+				}
+				else if (nameOfBlock == "Zblock") {
+					blockVec[currentBlock]->setTexture("resources/Zblock.png");
 				}
 				isCreated = true;
 			}
@@ -44,6 +53,7 @@ void Game::start() {
 				// check if block hits another block:
 				if (i != currentBlock) {
 					for (int j = 0; j < blockVec.size(); j++) {
+						// so the current block doesn't collide with itself:
 						if (j != currentBlock) {
 							// if another block is hit:
 							if (blockVec[i]->PixelPerfectCollision(blockVec[currentBlock]->getSprite(), blockVec[j]->getSprite(),
@@ -74,16 +84,33 @@ void Game::start() {
 // get random block:
 void Game::addRandomBlock() {
 	// generate random block num:
-	int rndBlock = rand() % 2 + 1;
+	int rndBlock = rand() % 5 + 1;
 
 	// make Tblock:
 	if (rndBlock == 1) {
 		// add new Tblock:
-		blockVec.push_back(new Tblock());
+		nameOfBlock = "Tblock";
+		blockVec.push_back(new Block("Tblock"));
 	}
 	else if (rndBlock == 2) {
 		// add new Lblock:
-		blockVec.push_back(new Lblock());
+		nameOfBlock = "Lblock";
+		blockVec.push_back(new Block("Lblock"));
+	}
+	else if (rndBlock == 3) {
+		// add new Sblock:
+		nameOfBlock = "Sblock";
+		blockVec.push_back(new Block("Sblock"));
+	}
+	else if (rndBlock == 4) {
+		// add new SQblock:
+		nameOfBlock = "SQblock";
+		blockVec.push_back(new Block("SQblock"));
+	}
+	else if (rndBlock == 5) {
+		// add new Zblock:
+		nameOfBlock = "Zblock";
+		blockVec.push_back(new Block("Zblock"));
 	}
 }
 

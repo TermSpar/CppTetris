@@ -4,8 +4,6 @@
 #include <SFML/Graphics.hpp>
 
 #include "Block.h"
-#include "Tblock.h"
-#include "Lblock.h"
 
 #include "Game.h"
 
@@ -58,7 +56,13 @@ int main() {
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-			// placeholder
+			// move down faster:
+			for (int i = 0; i < game.getBlocks()->size(); i++) {
+				Block *current = game.getBlocks()->at(i);
+				if (!current->getHasFallen()) {
+					current->move({ 0, moveSpeed });
+				}
+			}
 		}
 
 		//Event Loop:

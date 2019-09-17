@@ -3,8 +3,7 @@
 #include <iostream>
 #include <SFML\Graphics.hpp>
 
-#include "Tblock.h"
-#include "Lblock.h"
+#include "Block.h"
 
 class Game {
 public:
@@ -28,6 +27,7 @@ private:
 	// keep track of block vector:
 	std::vector<Block*> blockVec;
 	int currentBlock = 0;
+	std::string nameOfBlock = "";
 
 	// check if it's the first loop:
 	bool gameHasStarted = false;
@@ -42,6 +42,6 @@ private:
 	void blockIsFallen();
 
 	// block move speed:
-	float blockSpeed = 0.1;
+	float blockSpeed = 0.06;
 };
 

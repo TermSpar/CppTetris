@@ -1,43 +1,54 @@
 #pragma once
 
-// parent class:
-
-#include <SFML\Graphics.hpp>
 #include <iostream>
+#include <SFML/Graphics.hpp>
 
 class Block {
 public:
-	Block() {}
+	Block(std::string);
 
-	virtual void drawTo(sf::RenderWindow &w) {}
+	void drawTo(sf::RenderWindow &w);
 
-	virtual void move(sf::Vector2f) {}
+	void move(sf::Vector2f);
 
-	virtual void setTexture(std::string) {}
+	void setTexture(std::string);
 
-	virtual std::string getBlockName() { return ""; }
+	// change L:
+	void changeUp();
 
-	virtual void changeUp() {}
+	void setHasChanged(bool);
 
-	virtual void setHasChanged(bool) {}
+	// check if this block has reached the ground:
+	void setFallen(bool);
 
-	virtual bool PixelPerfectCollision(const sf::Sprite& a, const sf::Sprite& b,
-		const sf::Image& imgA, const sf::Image& imgB) {return false;}
+	bool getHasFallen();
 
-	virtual inline sf::IntRect FToIRect(const sf::FloatRect& f) { sf::IntRect i; return i; }
+	bool intersects(sf::FloatRect bounds);
 
-	virtual sf::Sprite getSprite() { sf::Sprite s; return s; }
+	bool PixelPerfectCollision(const sf::Sprite& a, const sf::Sprite& b,
+		const sf::Image& imgA, const sf::Image& imgB);
 
-	virtual sf::Image getImage() { sf::Image i; return i; }
+	inline sf::IntRect FToIRect(const sf::FloatRect& f);
 
-	virtual bool intersects(sf::FloatRect) { return false; }
+	sf::Sprite getSprite();
 
-	virtual void setFallen(bool) {}
+	sf::Image getImage();
 
-	virtual bool getHasFallen() { return false; }
+	void setPosition(sf::Vector2f);
 
-	virtual void setPosition(sf::Vector2f) {}
+	~Block();
 
-	~Block() {}
+private:
+	// block stuff:
+	sf::Texture blockTexture;
+	sf::Sprite blockSprite;
+	sf::Image blockImage;
+
+	// keep track of which appearance L's on:
+	int appearance = 1;
+	bool hasChanged = false;
+
+	// whether the block has reached ground:
+	bool hasFallen = false;
 };
 

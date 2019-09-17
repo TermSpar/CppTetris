@@ -29,15 +29,30 @@ void Game::start() {
 				// generate random x position:
 				float xPos = rand() % 800 + 1;
 				blockVec[currentBlock]->setPosition({ xPos, 20 });
+				// set right texture:
+				if (blockVec[currentBlock]->getBlockName() == "Tblock") {
+					blockVec[currentBlock]->setTexture("resources/Tblock.png");
+				}
+				else if (blockVec[currentBlock]->getBlockName() == "Lblock") {
+					blockVec[currentBlock]->setTexture("resources/Lblock.png");
+				}
 				isCreated = true;
 			}
 
 			// make block fall until ground or another block:
 			for (int i = 0; i < blockVec.size(); i++) {
 				// check if block hits another block:
-				if (i != currentBlock && blockVec[currentBlock]->intersects(*blockVec[i])) {
-					// if another block is hit, stop falling:
-					blockIsFallen();
+				if (i != currentBlock) {
+					for (int j = 0; j < blockVec.size(); j++) {
+						if (j != currentBlock) {
+							// if another block is hit:
+							if (blockVec[i]->PixelPerfectCollision(blockVec[currentBlock]->getSprite(), blockVec[j]->getSprite(),
+								blockVec[currentBlock]->getImage(), blockVec[j]->getImage())) {
+								// stop falling:
+								blockIsFallen();
+							}
+						}
+					}
 				}
 			}
 			// check if block hits ground:
@@ -72,6 +87,7 @@ void Game::addRandomBlock() {
 	}
 }
 
+// call this everytime a block has reached the ground:
 void Game::blockIsFallen() {
 	// set fallen to true:
 	blockVec[currentBlock]->setFallen(true);

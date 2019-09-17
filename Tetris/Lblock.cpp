@@ -1,44 +1,40 @@
 #include "Lblock.h"
 
 Lblock::Lblock() {
-	L1.setFillColor(sf::Color::Magenta);
-	L1.setSize({ 20, 70 });
-	L2.setFillColor(sf::Color::Magenta);
-	L2.setSize({ 30, 20 });
+	Limage.loadFromFile("resources/Lblock.png");
 }
 
 void Lblock::drawTo(sf::RenderWindow &window) {
-	window.draw(L1);
-	window.draw(L2);
+	window.draw(Lsprite);
 }
 
 void Lblock::move(sf::Vector2f dist) {
-	L1.move(dist); L2.move(dist);
+	Lsprite.move(dist);
+}
+
+void Lblock::setTexture(std::string texture) {
+	Ltexture.loadFromFile(texture);
+	Lsprite.setTexture(Ltexture);
+}
+
+std::string Lblock::getBlockName() {
+	return "Lblock";
 }
 
 void Lblock::changeUp() {
 	if (!hasChanged) {
 		if (appearance == 1) {
 			// turn L on its side:
-			L1.setSize({ 70, 20 });
-			L2.setSize({ 20, 30 });
-			L2.setPosition({ L1.getPosition().x + 50, L1.getPosition().y - 30 });
 			appearance++;
 			hasChanged = true;
 		}
 		else if (appearance == 2) {
 			// turn L upsidedown:
-			L1.setSize({ 70, 20 });
-			L2.setSize({ 20, 30 });
-			L2.setPosition({ L1.getPosition().x + 50, L1.getPosition().y + 20 });
 			appearance++;
 			hasChanged = true;
 		}
 		else if (appearance == 3) {
 			// turn L back to original position and reset appearance:
-			L1.setSize({ 20, 70 });
-			L2.setSize({ 30, 20 });
-			L2.setPosition({ L1.getPosition().x + 20, L1.getPosition().y + 50 });
 			appearance = 1;
 			hasChanged = true;
 		}
@@ -57,25 +53,70 @@ bool Lblock::getHasFallen() {
 	return hasFallen;
 }
 
-bool Lblock::intersects(sf::FloatRect globalBounds) {
-	// check if either part of the L block is intersecting:
-	if (L1.getGlobalBounds().intersects(globalBounds) || L2.getGlobalBounds().intersects(globalBounds))
+bool Lblock::intersects(sf::FloatRect bounds) {
+	if (Lsprite.getGlobalBounds().intersects(bounds)) {
 		return true;
-	else
-		return false;
+	}
+	return false;
 }
 
-bool Lblock::intersects(Block &block) {
-	if (block.intersects(L1.getGlobalBounds()) || block.intersects(L2.getGlobalBounds()))
-		return true;
-	else
-		return false;
+inline sf::IntRect Lblock::FToIRect(const sf::FloatRect& f) {
+	return sf::IntRect((int)f.left, (int)f.top, (int)f.width, (int)f.height);
+}
+
+bool Lblock::PixelPerfectCollision(const sf::Sprite& a, const sf::Sprite& b,
+	const sf::Image& imgA, const sf::Image& imgB) {
+	sf::IntRect boundsA(FToIRect(a.getGlobalBounds()));
+	sf::IntRect boundsB(FToIRect(b.getGlobalBounds()));
+	sf::IntRect intersection;
+
+	if (boundsA.intersects(boundsB, intersection)) {
+		const sf::Transform& inverseA(a.getInverseTransform());
+		const sf::Transform& inverseB(b.getInverseTransform());
+
+		const sf::Vector2u& sizeA(imgA.getSize());
+		const sf::Vector2u& sizeB(imgB.getSize());
+
+		const sf::Uint8* pixA = imgA.getPixelsPtr();
+		const sf::Uint8* pixB = imgB.getPixelsPtr();
+
+		sf::Vector2f vecA, vecB;
+		int xMax = intersection.left + intersection.width;
+		int yMax = intersection.top + intersection.height;
+
+		for (int x = intersection.left; x < xMax; x++)
+			for (int y = intersection.top; y < yMax; y++) {
+				vecA = inverseA.transformPoint(x, y);
+				vecB = inverseB.transformPoint(x, y);
+
+				int idxA = ((int)vecA.x + ((int)vecA.y)*sizeA.x) * 4 + 3;
+				int idxB = ((int)vecB.x + ((int)vecB.y)*sizeB.x) * 4 + 3;
+
+				if (vecA.x > 0 && vecA.y > 0 &&
+					vecB.x > 0 && vecB.y > 0 &&
+					vecA.x < sizeA.x && vecA.y < sizeA.y &&
+					vecB.x < sizeB.x && vecB.y < sizeB.y &&
+					pixA[idxA] > 0 &&
+					pixB[idxB] > 0) {
+					return true;
+				}
+			}
+	}
+
+	return false;
+}
+
+sf::Sprite Lblock::getSprite() {
+	return Lsprite;
+}
+
+sf::Image Lblock::getImage() {
+	return Limage;
 }
 
 void Lblock::setPosition(sf::Vector2f pos) {
 	// make sure L block stays together as one thing:
-	L1.setPosition(pos);
-	L2.setPosition({ pos.x + 20, pos.y + 50 });
+	Lsprite.setPosition(pos);
 }
 
 Lblock::~Lblock() {

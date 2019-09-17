@@ -57,6 +57,9 @@ int main() {
 				}
 			}
 		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+			// placeholder
+		}
 
 		//Event Loop:
 		while (window.pollEvent(Event)) {

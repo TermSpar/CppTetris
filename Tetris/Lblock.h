@@ -10,6 +10,10 @@ public:
 
 	virtual void move(sf::Vector2f);
 
+	virtual void setTexture(std::string);
+
+	virtual std::string getBlockName();
+
 	// change L:
 	virtual void changeUp();
 
@@ -20,17 +24,26 @@ public:
 
 	virtual bool getHasFallen();
 
-	virtual bool intersects(sf::FloatRect);
+	virtual bool intersects(sf::FloatRect bounds);
 
-	virtual bool intersects(Block &b);
+	virtual bool PixelPerfectCollision(const sf::Sprite& a, const sf::Sprite& b,
+		const sf::Image& imgA, const sf::Image& imgB);
+
+	virtual inline sf::IntRect FToIRect(const sf::FloatRect& f);
+
+	virtual sf::Sprite getSprite();
+
+	virtual sf::Image getImage();
 
 	virtual void setPosition(sf::Vector2f);
 
 	~Lblock();
 
 private:
-	// T shape:
-	sf::RectangleShape L1; sf::RectangleShape L2;
+	// L shape:
+	sf::Texture Ltexture;
+	sf::Sprite Lsprite;
+	sf::Image Limage;
 
 	// keep track of which appearance L's on:
 	int appearance = 1;
